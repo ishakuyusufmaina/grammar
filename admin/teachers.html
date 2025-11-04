@@ -8,7 +8,7 @@
   <title>Teachers - Name, Username, Password</title>
   <style>
   *{
-    box-sizing: border-box;
+   box-sizing: border-box;
   }
     body {
       background-color: #f4f7fa;
@@ -163,6 +163,11 @@ button.delete:hover {
   border-radius: 5px;
   font-size: 1rem;
 }
+  
+ .sections > select {
+   min-width: 150px;
+  
+ }
 
 /* Buttons */
 .modal-content button {
@@ -232,7 +237,7 @@ button.delete:hover {
           </th-->
           <th>Username</th>
           
-          <!--th>Password</th-->
+          <th>Section</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -293,13 +298,11 @@ button.delete:hover {
   
   
  add.textContent = "Loading.."; 
-  onAuthStateChanged(auth, user=>{
-    if (!user && !test) {
-      window.location.href = "../signin.html";
-      return;
-    }
-    
-  })
+  let user = await new Promise(resolve=>
+  onAuthStateChanged(auth, u=> resolve(u))
+  );
+  let id = user.email.replace(/@.*/, "");
+console.log(id);
   
     //let sessionsRef = doc(db, schoolId, "sessions");
     let sectionRef = doc(db, schoolId, "section");
@@ -309,20 +312,21 @@ button.delete:hover {
      let teachersRef = doc(db, schoolId, "teachers");
     let teachersDoc = await getDoc(teachersRef);
   teachers = teachersDoc.exists()? teachersDoc.data() : {}
+    let teacher = teachers[id];
+
 
   let subjs = [];
-  const sects = [];
-  if (sectionDoc.exists()){
+  const sects = teacher.adminFunctions.teachers.resources;
+  console.log(sects);
+ /* if (sectionDoc.exists()){
   let sections = sectionDoc.data();
     for (const key in sections){
       let section = sections[key];
       sects.push(key);
-      let subjects = section.subjects.sort();    
-      let classes = []; //section.classes.sort();
    
   }
   
-  }
+  }*/
 
   
   function presentTeachers(teachs){
@@ -393,7 +397,7 @@ button.delete:hover {
        setTimeout(e=>message.classList.remove("show"), 2000);
 
     }
-    
+  
     closeBtn.onclick = closeModal;
    
   }
@@ -412,7 +416,8 @@ button.delete:hover {
           <td><input type="text" disabled class="name" value="${name}" name="name" placeholder="Name"></td>
      
      
-          <td class="username"><input disabled value="${username}" class="username" name="username" placeholder="Username"></td>         
+          <td class="username"><input disabled value="${username}" class="username" name="username" placeholder="Username"></td>
+          <td class="sections"><select multiple></select></td>
           <td><button class="assign">assign</button><button class="delete" type="button" onclick="deleteField(this)">remove</button></td>
           `;
 
@@ -420,7 +425,19 @@ button.delete:hover {
        row.querySelector(".sn").textContent = container.children.length;
       row.querySelector(".delete").onclick = e=>deleteField(e.target);
       row.querySelector(".assign").onclick = e=> window.location.href = `teacher.html?username=${username}`;
-
+      let sectsSel = row.querySelector(".sections>select");
+      teacher.sections??=[];
+      sects.forEach(s=>{
+        let opt = new Option(s);
+        sectsSel.append(opt);
+        if (teacher.sections.includes(s))
+        opt.selected = true;
+      });
+      sectsSel.onchange = e=>{
+        let sections = Array.from(sectsSel.selectedOptions).map(opt=>opt.value);
+        teacher.sections = sections;
+      }
+      
 
       if (teacher.username==schoolId) {
        row.querySelector(".delete").remove()
