@@ -308,12 +308,28 @@ const terms = ["first term", "second term", "third term"];
     }
       //sessionSelect.firstChild.nextElementSibling.selected = true;
   }
- 
+  
+  
+  let user = await new Promise(resolve=>
+  onAuthStateChanged(auth, u=> resolve(u))
+  );
+  let id = user.email.replace(/@.*/, "");
+console.log(id);
+  
+    //let sessionsRef = doc(db, schoolId, "sessions");
+    var teachers;
+     let teachersRef = doc(db, schoolId, "teachers");
+    let teachersDoc = await getDoc(teachersRef);
+  teachers = teachersDoc.exists()? teachersDoc.data() : {}
+    let teacher = teachers[id];
+
+
     let sectionRef = doc(db, schoolId, "section");
   let sections = (await getDoc(sectionRef)).data();
   const classSection = {};
   classSection.get = cls=>classSection[cls.toLowerCase()];
   
+  let sects = teacher.adminFunctions.feesRecord.resources;
   Object.keys(sections)
   .forEach(sectK=>{
     let section = sections[sectK];
@@ -377,12 +393,14 @@ const terms = ["first term", "second term", "third term"];
         })
         newArr = newArr.reverse();
         console.log(newArr);
-        q = query(collection(db, schoolId, "db", "students"), where("names", "array-contains-any", ...newArr));
+        q = query(collection(db, schoolId, "db", "students"), where("section", "in", sects), where("names", "array-contains-any", ...newArr));
+        console.log(sects);
       } else {
         console.log(queryType);
         console.log(queryValue);
-        q = query(collection(db, schoolId, "db", "students"), where(queryType, "==", queryValue));
+        q = query(collection(db, schoolId, "db", "students"), where("section", "in", sects), where(queryType, "==", queryValue));
 
+        console.log(sects);
       }
       let studentDocs = await getDocs(q);
       searchBtn.classList.remove("loading");
