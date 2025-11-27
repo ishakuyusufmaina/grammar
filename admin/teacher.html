@@ -304,13 +304,13 @@ button.delete:hover {
 const teachers = teachersDoc.data();
   console.log(headId);
   const head = teachers[headId]
-  const rsects = head.adminFunctions.section.resources;
+  //const rsects = head.adminFunctions.section.resources;
   
   let subjs = [];
   
   if (sectionDoc.exists()){
   let sections = sectionDoc.data();
-    rsects.forEach(key=>{
+    Object.keys(sections).forEach(key=>{
     let section = sections[key];
     let subjects = section.subjects.sort((a, b)=>a.localeCompare(b));
     
