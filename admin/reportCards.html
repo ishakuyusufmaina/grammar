@@ -4,13 +4,14 @@
 <head>
   <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="../config.js"></script>
- <script src="../batch2.js"></script>
-
+  <script src="../config.js"></script>
+  <script src="../batch2.js"></script>
+  
   <!-- Include this in the <head> of your HTML -->
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <script src="rc/rc.js"></script>
   <title>Position</title>
+  
 </head>
 <body>
   <h1 class="no-print">
@@ -22,8 +23,7 @@
     <option> -select session- </option>
   </select>
   <select id="classSelect">
-    <option value=""> -select class- </option>
-    
+    <option value=""> [select class] </option>    
   </select>
   
   
@@ -162,12 +162,15 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
     let sectK=""; //= classSelect.selectedOptions[0].parentElement.label;
     for (const sect in sections){
     //  console.log(sections[sect].classes, clas);
+      sections[sect].classes = sections[sect].classes.map(c=>c.trim());
       if (sections[sect].classes.includes(classSelect.value)) {
         sectK = sect;
         console.log(sect);
         break;
       }
     }
+    
+   console.log( sections[sectK]);
     srp = sections[sectK].srp;
     scoreInterpretations = sections[sectK].scoreInterpretations;
     scoreSheetConfig = sections[sectK].scoreSheetConfig;
@@ -330,6 +333,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       `;
      
       let subjects = std.subjects??{};
+      console.log(JSON.stringify(subjects));
       let subjKeys = Object.keys(subjects).sort();
       let stdReg = std.religion;
       if (!stdReg) {
@@ -378,7 +382,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
         }
         <td>${subjects[subj][termIndex].exam}</td>
         <td>${total}</td>
-        <td>${(scoremeta[subj].students.find(s=>s.id==std.id)).position}</td>
+        <td>${(scoremeta[subj]??{students:[{id: std.id, position: "-"}]}.students.find(s=>s.id==std.id)).position}</td>
         <td>${interp.grade? interp.grade : grade(0, score) /*grade(t1+t2+t3, Number(subjects[subj][termIndex].exam))*/}</td>
         <td>${interp.remark? interp.remark : remark(0, score) /*remark(t1+t2+t3, Number(subjects[subj][termIndex].exam))*/}</td>
         
