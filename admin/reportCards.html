@@ -170,14 +170,14 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       }
     }
     
-   console.log( sections[sectK]);
+   console.log(sectK);
     srp = sections[sectK].srp;
     scoreInterpretations = sections[sectK].scoreInterpretations;
     scoreSheetConfig = sections[sectK].scoreSheetConfig;
     let assessments = scoreSheetConfig.assessments??[{name: "CA", subtotal: 30}];
     averageInterps = sections[sectK].averageInterpretations??{};
     console.log(averageInterps);
-   // console.log(JSON.stringify(scoreSheetConfig));
+    console.log(JSON.stringify(assessments));
     sectSubjs = sections[sectK].subjects;
     predefinedAsms = [];
     useDerivedAsm = sections[sectK].useDerivedAsm;
@@ -186,6 +186,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       scoreSheetConfig.derivedAsms.forEach(dasm=>{
          dasm.subtotal = 0;
          dasm.derivatives.forEach(d=>    {
+           console.log(d);
           dasm.subtotal +=Number(assessments.find(a=>a.name==d).subtotal)
           
         });
@@ -289,9 +290,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       <header>
       <h2>${schoolName.toUpperCase()}</h2>
       <address>
-      IBRAHIM ANAS ROAD, POMPOMARI ESTATE, P.O Box 1287, BORNO STATE
-      <br>
-      
+       Along 7 Division, Pompommari, Bypass, Maiduguri, Borno State
       </address>
       </header>
       <div id="logo-container">
@@ -301,32 +300,34 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       </div>
       <div id="bottom-hl">     
       </div>
-      <img class="logo" src="../logo.png">
+      <img class="logo" src="../logo.jpg">
       </div>
       <h3>TERMINAL REPORT</h3>
-      <table class="student-info-table">
-      <tr class="std-name">      
-        <td colspan="2">NAME: ${std.name.toUpperCase()}</td>
+          <table class="student-info-table">
+      
+      <tr class="std-name">          
+        <td>NAME: ${std.name.toUpperCase()}</td>
+        <td>GENDER: ${std.gender}</td>
       </tr>
       <tr>
-      <td>GENDER: ${std.gender}</td>
+      <td>TERM: ${sessionSelect.value.split(",")[1]}</td>
       <td>CLASS: ${classSelect.value}</td>
       </tr>
       <tr>    
-      <td>SESSION: ${sessionSelect.value}</td>
-      <td>RESUMPTION DATE: <strong><time>_</time></strong></td>
+      <td>SESSION: ${sessionSelect.value.split(",")[0]}</td>
+      <td>RESUMPTION: <strong><time>5<sup>th</sup> JANUARY, 2026</time></strong></td>
       </tr>
       <tr>
-      <td>NUMBER IN CLASS: ${students.length}</td>      
-      <td>POSITION: ${std.position}</td>
+      <td>NO: IN CLASS: ${students.length}</td>      
+      <td>POSITION: ${toSuperscriptOrdinal(Number(std.position))}</td>
       </tr>
-      </table>   
+      </table> 
       </caption>
       <tr>
       <th>SUBJECT</th>${
           getAsmHeads(predefinedAsms, scoreSheetConfig.exam)
       }
-      <th>POS</th>
+      <!--th>POS</th-->
       <th>GRADE</th>
       <th>REMARK</th>
       </tr>
@@ -355,7 +356,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
             score = 0;
             a.derivatives.forEach(d=>{
               k = d.toLowerCase();
-              score += Number(termScores[k].replace("-"));
+              score += Number(termScores[k].replace("-", 0));
             })
           } else {
             score = termScores[k];
@@ -366,6 +367,9 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
           let k = a.name.toLowerCase();
           total += Number(termScores[k].replace("-", "0"))
         })
+        let exam = Number(termScores.exam.replace("-", "0"))
+        total += exam; // Number(termScores.exam.replace("-", "0"))
+        
         console.log(total);
         let t1= Number(subjects[subj][termIndex].test1 ?? 0);
         let t2 = Number(subjects[subj][termIndex].test2 ?? 0);
@@ -380,9 +384,9 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
         ${
         getScores(scores)
         }
-        <td>${subjects[subj][termIndex].exam}</td>
+        <td>${exam}</td>
         <td>${total}</td>
-        <td>${(scoremeta[subj]??{students:[{id: std.id, position: "-"}]}.students.find(s=>s.id==std.id)).position}</td>
+        <!--td>${(scoremeta[subj]??{students:[{id: std.id, position: "-"}]}.students.find(s=>s.id==std.id)).position}</td-->
         <td>${interp.grade? interp.grade : grade(0, score) /*grade(t1+t2+t3, Number(subjects[subj][termIndex].exam))*/}</td>
         <td>${interp.remark? interp.remark : remark(0, score) /*remark(t1+t2+t3, Number(subjects[subj][termIndex].exam))*/}</td>
         
@@ -401,7 +405,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       let domains = sections[std.section].psychometrics;
       console.log(domains, std.section);
       
-      domains.forEach(d=>{
+     /* domains.forEach(d=>{
         let r = psychoElm.insertRow();
         let dC = r.insertCell();
         std.psychometrics[d]??=0;
@@ -410,14 +414,14 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
         let mC = r.insertCell();
         mC.innerHTML = measure+"/5";
       //  txt +=`<li>${d} - ${measure}/5</li>`;
-      });
+      });*/
       let psychoCont = document.createElement("table");
       psychoCont.innerHTML = `
       <h3>Behaviour and Activities</h3>
       `;
-      psychoCont.append(psychoElm);
+    //  psychoCont.append(psychoElm);
     
-      wrapper.append(reportCard, psychoCont);
+      wrapper.append(reportCard);
       
       let p = document.createElement("p");
       p.innerHTML = `
@@ -437,7 +441,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       `;
       wrapper.append(p);
       p.classList.add("powered");
-container.append(hr, wrapper);
+      container.append(hr, wrapper);
     });
     
     function remark(test, exam){
@@ -473,21 +477,46 @@ container.append(hr, wrapper);
   
   
   
-   function assignPositions(students){
-    students.sort((a, b)=>b.score/b.sc - a.score/a.sc);
-  students.forEach((student, i)=>{
-    student.position = i+1
-    if (students[i+1])
-    student.next = students[i+1];
-    if (students[i-1])
-    student.prev = students[i-1];
-    if ((!!student.prev) && (student.score/student.sc == student.prev.score/student.prev.sc))
-    student.position = student.prev.position;
-    //console.log(student.position);
+   function assignPositions(students) {
+  // Defensive: ensure score and sc numeric
+  students.forEach(s => {
+    s.score = Number(s.score) || 0;
+    s.sc = Number(s.sc) || 0;
   });
-   
-    
-  }
+
+  // Compute average guardedly (students with sc===0 go to the end)
+  students.sort((a, b) => {
+    const aAvg = a.sc > 0 ? (a.score / a.sc) : -Infinity;
+    const bAvg = b.sc > 0 ? (b.score / b.sc) : -Infinity;
+    // sort descending by average, and if tie, fall back to total score descending
+    if (bAvg === aAvg) return Number(b.score) - Number(a.score);
+    return bAvg - aAvg;
+  });
+
+  // Assign positions with tie-handling using tolerance
+  const EPS = 1e-9;
+  let currentPosition = 0;
+  let lastAvg = null;
+  let lastPositionAssigned = 0;
+
+  students.forEach((student, idx) => {
+    currentPosition = idx + 1;
+    const avg = student.sc > 0 ? student.score / student.sc : -Infinity;
+
+    if (lastAvg !== null && Math.abs(avg - lastAvg) <= EPS) {
+      // tie -> same position as previous
+      student.position = lastPositionAssigned;
+    } else {
+      student.position = currentPosition;
+      lastPositionAssigned = currentPosition;
+      lastAvg = avg;
+    }
+
+    // Link prev/next for convenience (clear first to avoid stale refs)
+    student.prev = students[idx - 1] || null;
+    student.next = students[idx + 1] || null;
+  });
+}
   
   
   
@@ -537,6 +566,26 @@ container.append(hr, wrapper);
     let lastInterp = interpsModel[interpsModel.length-1];
     return lastInterp?.comment || '';
   }
+  
+  
+  function toSuperscriptOrdinal(num) {
+  const suffixes = {
+    '1': 'ˢᵗ',
+    '2': 'ⁿᵈ',
+    '3': 'ʳᵈ'
+  };
+
+  // Handle 11th, 12th, 13th as special cases
+  const lastTwo = num % 100;
+  let suffix = 'ᵗʰ';
+
+  if (lastTwo < 11 || lastTwo > 13) {
+    const lastDigit = num % 10;
+    suffix = suffixes[lastDigit] || 'ᵗʰ';
+  }
+
+  return num + suffix;
+}
   </script>
   
 <style>
@@ -615,7 +664,7 @@ container.append(hr, wrapper);
 
  th,
 td {
-  border: 1px solid #ddd;
+  border: 1px solid #003366;
   padding: 6px;
   text-align: center;
 }
@@ -757,9 +806,9 @@ text-align: center;
   }
   
   #top-hl, #bottom-hl {
-    border: 8px solid #b12449;
+    border: 8px solid #003366;;
     position: absolute;
-    width: calc(100% - 22px);
+    width: calc(100%);
     left: 0;
     bottom: 40px;
     z-index: 1;
@@ -777,7 +826,7 @@ text-align: center;
   #bottom-hl {
  
     position: absolute;
-    width: calc(100% - 22px);
+    width: calc(100%);
     left: 0;
     bottom: 20px;
   }
@@ -791,7 +840,7 @@ text-align: center;
       font-size: 1rem;
   }
 .table-container {
-  border: 2px solid #b12449;
+  border: 2px solid #003366;;
 }
   @media print {
     hr {
