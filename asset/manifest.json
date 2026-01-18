@@ -1,7 +1,7 @@
 {
   "name": "Grammar College Kamo",
   "short_name": "GCK",
-  "start_url": ".",
+  "start_url": "/signin.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0b3c7c",
