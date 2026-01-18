@@ -7,22 +7,22 @@
 <title>Noble Pearls Academy</title>
 
 <!-- Favicon -->
-<link rel="icon" href="https://noble.mainafly.com/logo.png" type="image/jpeg" />
+<link rel="icon" id="icon" type="image/jpeg" />
 
-<!-- Open Graph Meta Tags for Facebook, WhatsApp, etc. -->
-<meta property="og:title" content=Noble Pearl Academy" />
-<meta property="og:description" content="SIB Vesion of Noble Pearls Academy — Digital Innovative." />
+<!-- Open Graph Meta Tags for Facebook, WhatsApp, etc. 
+<meta property="og:title" content="Noble Pearl Academy" />
+<meta property="og:description" content="School in the Box — Digital Innovative." />
 <meta property="og:image" content="https://noble.mainafly.com/logo.png" />
 <meta property="og:url" content="https://noble.mainafly.com/" />
 <meta property="og:type" content="website" />
 
-<!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Maiduguri Innovative School" />
 <meta name="twitter:description" content="SIB Version of Noble Academy — Digital Innovative." />
 <meta name="twitter:image" content="https://innovative.mainafly.com/logo.png" />
+  -->
   
-<!-- Favicon links -->
+  
 <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="48x48" href="asset/favicon-48x48.png">
 <link rel="icon" type="image/png" sizes="96x96" href="asset/favicon-96x96.png">
@@ -122,13 +122,15 @@
 </head>
 <body>
 
-  <h1>Welcome to <small>SIB</small> <span id="sName">Noble Pearls</span> Installation</h1>
+  <h1>Welcome to <small>SIB</small> <span id="sName"></span> Installation</h1>
   <button id="install-btn">Install App</button>
-
+   <script src="config.js"></script>
   <script>
     let deferredPrompt;
     const installBtn = document.getElementById('install-btn');
-
+sName.innerHTML = schoolName;
+  icon.href=schoolURL + "/logo.png";
+  
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
