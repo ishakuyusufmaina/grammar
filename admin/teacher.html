@@ -259,6 +259,9 @@ button.delete:hover {
   </dialog>
 </div>
 
+  <script src="../config.js"></script>
+<script src="../batch2.js"></script>
+
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
@@ -266,20 +269,7 @@ button.delete:hover {
   import {getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
      // import {getDatabase, set, ref, onValue, child, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAeNrRGQpLaQ0fGDFOrpfQaD3t_k0akgIM",
-    authDomain: "sib-batch2.firebaseapp.com",
-    projectId: "sib-batch2",
-    storageBucket: "sib-batch2.firebasestorage.app",
-    messagingSenderId: "472226493442",
-    appId: "1:472226493442:web:78375bbe9fc1cabaa0e31b",
-    measurementId: "G-3T2QB03T3L"
-  };
-
   
-  
-  
-  const schoolId = "noble";
   const test = false;
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);

@@ -270,6 +270,8 @@ button.delete:hover {
 
   </dialog>
 </div>
+<script src="../config.js"></script>
+<script src="../batch2.js"></script>
 
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
@@ -277,19 +279,11 @@ button.delete:hover {
   import {getFirestore, doc, setDoc, getDoc} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
   import {getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
      // import {getDatabase, set, ref, onValue, child, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
- const firebaseConfig = {
-    apiKey: "AIzaSyAeNrRGQpLaQ0fGDFOrpfQaD3t_k0akgIM",
-    authDomain: "sib-batch2.firebaseapp.com",
-    projectId: "sib-batch2",
-    storageBucket: "sib-batch2.firebasestorage.app",
-    messagingSenderId: "472226493442",
-    appId: "1:472226493442:web:78375bbe9fc1cabaa0e31b",
-    measurementId: "G-3T2QB03T3L"
-  };
+ 
 
   
   
-  const schoolId = "noble";
+  
   const test = true;
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
@@ -314,6 +308,7 @@ console.log(id);
   teachers = teachersDoc.exists()? teachersDoc.data() : {}
     let teacher = teachers[id] || {};
 
+ let sections = sectionDoc.data();
 
   let subjs = [];
  teacher.adminFunctions ??={teachers:{resources:[]}};
@@ -339,6 +334,15 @@ console.log(id);
       vals.forEach(val=>{
       let teacher = val
       teacher.load ??= {};
+       teacher.sections ??=[];
+     /* for (const subj in teacher.load){
+       for (const seck in sections){
+        let cls = teacher.load[subj]+"";
+        //console.log(cls.trim(), seck, sections[seck].classes);
+        if (sections[seck].classes.includes(cls.trim()))
+        teacher.sections.push(seck);
+       }
+      }*/
       if (!teacher.sections.filter(sect=>sects.includes(sect)).length) return;
       addField(teacher);
       

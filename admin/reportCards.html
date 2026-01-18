@@ -40,24 +40,13 @@
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
   import {getFirestore, doc, setDoc, getDoc} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
   import {getAuth, signOut, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-     // import {getDatabase, set, ref, onValue, child, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
-/*const firebaseConfig = {
-  apiKey: "AIzaSyCm_DSZaYVQCt0ubBwRkE9nOTryJayxH0w",
-  authDomain: "school-in-the-box.firebaseapp.com",
-  projectId: "school-in-the-box",
-  storageBucket: "school-in-the-box.firebasestorage.app",
-  messagingSenderId: "596350496353",
-  appId: "1:596350496353:web:84c66c351700ddf0824420",
-  measurementId: "G-3MGCDH4FRF"
-};*/
+
 
       const app = initializeApp(firebaseConfig);
       const analytics = getAnalytics(app);
       const auth = getAuth(app);
     const db = getFirestore(app);
 
-//  const schoolId = "capital";
- // const schoolName = "Maiduguri Capital School"
   class StdList extends Array {
   constructor() {
     super();
@@ -293,7 +282,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       <header>
       <h2>${schoolName.toUpperCase()}</h2>
       <address>
-       Along 7 Division, Pompommari, Bypass, Maiduguri, Borno State
+      -School Address-
       </address>
       </header>
       <div id="logo-container">
@@ -318,7 +307,7 @@ let teachersDoc = await getDoc(doc(db, schoolId, "teachers"));
       </tr>
       <tr>    
       <td>SESSION: ${sessionSelect.value.split(",")[0]}</td>
-      <td>RESUMPTION: <strong><time>12<sup>th</sup> JANUARY, 2026</time></strong></td>
+      <td>RESUMPTION: <strong><time>5<sup>th</sup> JANUARY, 2026</time></strong></td>
       </tr>
       <tr>
       <td>NO: IN CLASS: ${students.length}</td>      
